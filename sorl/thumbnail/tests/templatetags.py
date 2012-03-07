@@ -9,7 +9,7 @@ class ThumbnailTagTest(BaseTest):
         context = Context({
             'source': RELATIVE_PIC_NAME,
             'invalid_source': 'not%s' % RELATIVE_PIC_NAME,
-            'size': (90, 100),
+            'size': (89, 100),
             'invalid_size': (90, 'fish'),
             'strsize': '80x90',
             'invalid_strsize': ('1notasize2'),
@@ -113,9 +113,9 @@ class ThumbnailTagTest(BaseTest):
         # as a tuple:
         output = self.render_template('src="'
             '{% thumbnail source size %}"')
-        expected = '%s_90x100_q85.jpg' % expected_base
+        expected = '%s_89x100_q85.jpg' % expected_base
         expected_fn = os.path.join(settings.MEDIA_ROOT, expected)
-        self.verify_thumbnail((90, 67), expected_filename=expected_fn)
+        self.verify_thumbnail((89, 67), expected_filename=expected_fn)
         expected_url = ''.join((settings.MEDIA_URL, expected))
         self.assertEqual(output, 'src="%s"' % expected_url)
         # as a string:

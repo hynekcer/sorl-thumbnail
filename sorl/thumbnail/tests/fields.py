@@ -8,7 +8,7 @@ from sorl.thumbnail.fields import ImageWithThumbnailsField, ThumbnailField
 from sorl.thumbnail.tests.base import BaseTest, RELATIVE_PIC_NAME, PIC_NAME
 
 thumbnail = {
-    'size': (50, 50),
+    'size': (75, 75),
 }
 extra_thumbnails = {
     'admin': {
@@ -62,11 +62,13 @@ class FieldTest(BaseTest):
         thumb = model.photo.thumbnail
         tag = model.photo.thumbnail_tag
         expected_filename = os.path.join(settings.MEDIA_ROOT,
-            'sorl-thumbnail-test_source_jpg_50x50_q85.png')
-        self.verify_thumbnail((50, 37), thumb, expected_filename)
-        expected_tag = '<img src="%s" width="50" height="37" alt="" />' % \
+            'sorl-thumbnail-test_source_jpg_75x75_q85.png')
+        # test cases should have determinictic rounding, not exactly 37.5 px +- small random for width 50 px.
+        # image width should be divisible by 4 or odd
+        self.verify_thumbnail((75, 56), thumb, expected_filename)
+        expected_tag = '<img src="%s" width="75" height="56" alt="" />' % \
             '/'.join((settings.MEDIA_URL.rstrip('/'),
-                      'sorl-thumbnail-test_source_jpg_50x50_q85.png'))
+                      'sorl-thumbnail-test_source_jpg_75x75_q85.png'))
         self.assertEqual(tag, expected_tag)
 
     def test_delete_thumbnails(self):
@@ -79,7 +81,7 @@ class FieldTest(BaseTest):
 
     def test_generate_on_save(self):
         main_thumb = os.path.join(settings.MEDIA_ROOT, 'test',
-                        'sorl-thumbnail-test_source_jpg_50x50_q85.jpg')
+                        'sorl-thumbnail-test_source_jpg_75x75_q85.jpg')
         admin_thumb = os.path.join(settings.MEDIA_ROOT, 'test',
                         'sorl-thumbnail-test_source_jpg_30x30_crop_q85.jpg')
         self.images_to_delete.add(main_thumb)
@@ -107,11 +109,11 @@ class ImageWithThumbnailsFieldTest(BaseTest):
         tag = model.photo.thumbnail_tag
         base_name = RELATIVE_PIC_NAME.replace('.', '_')
         expected_filename = os.path.join(settings.MEDIA_ROOT,
-                                         '%s_50x50_q85.jpg' % base_name)
-        self.verify_thumbnail((50, 37), thumb, expected_filename)
-        expected_tag = ('<img src="%s" width="50" height="37" alt="" />' %
+                                         '%s_75x75_q85.jpg' % base_name)
+        self.verify_thumbnail((75, 56), thumb, expected_filename)
+        expected_tag = ('<img src="%s" width="75" height="56" alt="" />' %
                         '/'.join([settings.MEDIA_URL.rstrip('/'),
-                                  '%s_50x50_q85.jpg' % base_name]))
+                                  '%s_75x75_q85.jpg' % base_name]))
         self.assertEqual(tag, expected_tag)
 
 
